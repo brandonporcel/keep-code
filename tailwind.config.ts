@@ -76,6 +76,9 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+      boxShadow: {
+        "header-custom": "inset 0 -1px 0 0 #5f636850",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
