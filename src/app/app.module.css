@@ -1,0 +1,20 @@
+.grandfather {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  clear: both;
+  position: relative;
+  background: purple;
+}
+.father {
+  display: flex;
+  flex-direction: row;
+  height: calc(100% - 64px);
+}
+
+.spacingSidebarContent {
+  background: transparent;
+  min-width: 280px;
+  position: relative;
+  min-width: 80px;
+}

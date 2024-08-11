@@ -1,13 +1,13 @@
 import { Archive, FileCode, Trash2Icon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
+import css from "./app.module.css";
 export default function Home() {
   return (
-    <div className="RfDI4d-sKfxWe">
-      <div className="RfDI4d-Iu19ad">
-        <div className="PvRhvb PvRhvb-qAWA2">
-          <div className="PvRhvb-fozPsf-ysyhld work-as-spacing"></div>
+    <div className={css.grandfather}>
+      <div className={css.father}>
+        <div className="PvRhvb-qAWA2">
+          <div className={css.spacingSidebarContent} />
           <div className="PvRhvb-bN97Pc">
             <div className="PvRhvb-LgbsSe-haAclf">
               <div className="custom-itemmm-father active">
