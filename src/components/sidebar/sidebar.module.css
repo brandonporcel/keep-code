@@ -1,0 +1,102 @@
+.sidebar {
+  background-color: #202124;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 95px);
+  min-height: auto;
+  overflow: hidden;
+  padding-top: 8px;
+  position: fixed;
+  top: 95px;
+  z-index: 985;
+  transition-duration: 150ms;
+  transition-property: width, box-shadow, border-radius;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  width: 80px;
+  &:hover {
+    overflow-y: auto;
+    box-shadow: 0 16px 10px 0 rgba(0, 0, 0, 0.14),
+      0 11px 18px 0 rgba(0, 0, 0, 0.12), 0 13px 5px -1px rgba(0, 0, 0, 0.2);
+    width: 280px;
+    -webkit-transition-delay: 350ms;
+    transition-delay: 350ms;
+    .copyright {
+      transition-delay: 350ms;
+      transition-property: visibility;
+      visibility: visible;
+    }
+  }
+}
+
+.itemCtn {
+  display: flex;
+  align-items: center;
+  &.active {
+    .customItem {
+      background-color: #41331c;
+      .svg {
+        color: #e8eaed;
+      }
+    }
+  }
+  &:hover {
+    .customItem {
+      margin-left: 0px;
+      .svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+    .customSpan {
+      margin-left: 22px;
+    }
+  }
+  .customItem {
+    border-radius: 50%;
+    margin-left: 6px;
+    width: 48px;
+    transition-duration: 150ms;
+    transition-property: margin, width, padding, border-radius;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    height: 48px;
+    min-width: 48px;
+    overflow: hidden;
+    display: grid;
+    place-content: center;
+    color: #9aa0a6;
+  }
+  .svg {
+    color: #9aa0a6;
+    transition-duration: 50ms;
+    transition-property: width, height;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    height: 22px;
+    width: 22px;
+    overflow: visible;
+    box-sizing: content-box;
+  }
+  .customSpan {
+    transition: all 3s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-left: 26px;
+  }
+}
+
+.copyright {
+  margin-bottom: 16px;
+  padding-left: 24px;
+  visibility: hidden;
+}
+.copyrightText {
+  color: #9aa0a6;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 5px;
+  text-decoration: none;
+  white-space: nowrap;
+  &:hover {
+    color: #e8eaed;
+  }
+}

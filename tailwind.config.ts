@@ -24,6 +24,7 @@ const config = {
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
+        backgroundStrong: "var(--background-strong)",
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -78,6 +79,7 @@ const config = {
       },
       boxShadow: {
         "header-custom": "inset 0 -1px 0 0 #5f636850",
+        "header-custom-scroll": "var(--header-custom-scroll)",
       },
     },
   },
