@@ -8,7 +8,6 @@ import {
   ViewHorizontalIcon,
 } from "@radix-ui/react-icons";
 import { Search } from "lucide-react";
-import Sidebar from "./sidebar";
 import { Input } from "./ui/input";
 import { ThemeToggle } from "./theme-toggle";
 import { Avatar } from "./header/avatar";
@@ -83,7 +82,7 @@ const Header = () => {
         </nav>
       </header>
       <div className="absolute left-9 top-24 transition-all duration-300 delay-100 lg:hidden">
-        {showSideBar && <Sidebar />}
+        {showSideBar && <p>sidebar</p>}
       </div>
     </>
   );
