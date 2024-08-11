@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+
+    --ring: 0 0% 14.9%;
+
+    --zist-highlight-default: #000000;
+    --zist-highlight-purple: #3f2c4b;
+    --zist-highlight-red: #5c1a1a;
+    --zist-highlight-yellow: #5c4b1a;
+    --zist-highlight-blue: #1a3d5c;
+    --zist-highlight-green: #1a5c20;
+    --zist-highlight-orange: #5c3a1a;
+    --zist-highlight-pink: #5c1a3a;
+    --zist-highlight-gray: #3a3a3a;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .slash-command-scroll::-webkit-scrollbar {
+    @apply w-2;
+  }
+  .slash-command-scroll::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+  .slash-command-scroll::-webkit-scrollbar-thumb {
+    @apply bg-stone-600 rounded-full;
+  }
+}
+
+/* Hide the minimap */
+/* } */
+/* .monaco-editor .minimap,
+.monaco-editor .minimap-slider {
+  display: none;
+}
+
+/* Hide the minimap decoration layer */
+/* .monaco-editor .decorationsOverviewRuler {
+  display: none !important;
+}
+.monaco-scrollable-element {
+  width: 6px;
+} */
+
+.monaco-editor .margin-view-overlays .margin-view-overlay {
+  padding: 0 !important; /* Remove padding */
+}
+
+.monaco-scrollable-element {
+  left: auto !important; /* Remove the left property */
+  overflow: visible !important;
+}
