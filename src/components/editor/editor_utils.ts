@@ -15,39 +15,6 @@ export const randomFileNamesWithExtension = [
   "random.md",
 ];
 
-export const tabsValue: any = {
-  MARKDOWN: {
-    key: "text/markdown",
-    value: "Markdown",
-  },
-  CODE: {
-    key: "text/code",
-    value: "Code",
-  },
-};
-
-export const handleFileTypeChange = (
-  fileId: string | null,
-  type: string,
-  gistData: GistData,
-  setGistData: React.Dispatch<React.SetStateAction<GistData>>
-) => {
-  const updatedFiles = gistData.files.map((file) =>
-    file.id === fileId
-      ? {
-          ...file,
-          type: type,
-          language: type === "text/markdown" ? "Markdown" : "Code",
-        }
-      : file
-  );
-
-  setGistData({
-    ...gistData,
-    files: updatedFiles,
-  });
-};
-
 export const handleFileContentChange = (
   fileId: string | null,
   value: string,
