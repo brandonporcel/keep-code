@@ -6,49 +6,46 @@ export default function Home() {
   return (
     <div className={css.grandfather}>
       <div className={css.father}>
-        <div className="PvRhvb-qAWA2">
-          <div className={css.spacingSidebarContent} />
-          <div className="PvRhvb-bN97Pc">
-            <div className="PvRhvb-LgbsSe-haAclf">
-              <div className="custom-itemmm-father active">
-                <div className="custom-itemmm">
-                  <FileCode />
-                </div>
-                <span className="PvRhvb-ibnC6b-V67aGc"> Code </span>
+        <div className={css.spacingSidebarContent} />
+        <div className="PvRhvb-bN97Pc">
+          <div className={css.otherCtn}>
+            <div className={`${css.itemCtn} ${css.active}`}>
+              <div className={`${css.customItem}`}>
+                <FileCode className={css.svg} />
               </div>
-              <div className="custom-itemmm-father">
-                <div className="custom-itemmm">
-                  <Archive />
-                </div>
-                <span className="PvRhvb-ibnC6b-V67aGc"> Archive </span>
+              <span className={css.customSpan}> Code </span>
+            </div>
+            <div className={`${css.itemCtn}`}>
+              <div className={`${css.customItem}`}>
+                <Archive className={css.svg} />
               </div>
+              <span className={css.customSpan}> Archive </span>
+            </div>
 
-              <div className="custom-itemmm-father">
-                <div className="custom-itemmm">
-                  <Trash2Icon />
-                </div>
-                <span className="PvRhvb-ibnC6b-V67aGc"> Bin </span>
+            <div className={`${css.itemCtn}`}>
+              <div className={`${css.customItem}`}>
+                <Trash2Icon className={css.svg} />
               </div>
+              <span className={css.customSpan}> Bin </span>
             </div>
-            <div className="PvRhvb-hSRGPd-haAclf">
-              <a
-                href="https://ssl.gstatic.com/keep/licenses/web_client_licenses.txt"
-                target="_blank"
-                className="PvRhvb-hSRGPd"
-                tabIndex={0}
-              >
-                Open-source licences
-              </a>
-            </div>
+          </div>
+          <div className={`${css.copyright} PvRhvb-hSRGPd-haAclf`}>
+            <a
+              href="https://ssl.gstatic.com/keep/licenses/web_client_licenses.txt"
+              target="_blank"
+              className={`${css.copyrightText}`}
+              tabIndex={0}
+            >
+              Open-source licences
+            </a>
           </div>
         </div>
-        <div className="RfDI4d-bN97Pc ogm-kpc">
-          <div className="h1U9Be-xhiy4 qAWA2 style-hcSsn">
+        <div className={`${css.mainWrapper}`}>
+          <div className="h1U9Be-xhiy4 w-[600px]">
             <Input placeholder="Buscar..." />
           </div>
-          <div className="RfDI4d-fSxGw-B1neQd-RFnRab"></div>
-          <div className="gkA7Yd-sKfxWe ma6Yeb-r8s4j-gkA7Yd style-jGlIp">
-            <div id="style-BgZpe" className="style-BgZpe">
+          <div className={css.listWrapper}>
+            <div className={css.snippetCtn}>
               <Button>hola</Button>
             </div>
           </div>
