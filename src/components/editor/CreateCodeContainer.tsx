@@ -1,9 +1,14 @@
-import React from 'react';
-import { Editor, OnChange } from '@monaco-editor/react';
+import React, { useState } from "react";
+import { Editor, OnChange } from "@monaco-editor/react";
 
-import { defaultFontMapper, displayFontMapper } from '@/app/styles/fonts';
-import { cn } from '@/lib/utils';
-import { extensionToLanguage } from '@/lib/constants/language';
+import { defaultFontMapper, displayFontMapper } from "@/app/styles/fonts";
+import { cn } from "@/lib/utils";
+import { extensionToLanguage } from "@/lib/constants/language";
+import { SelectCodeContainerStyle } from "./SelectCodeContainerStyle";
+import { SnippetStyle } from "@/lib/enums/snippet-style.enum";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Trash2Icon, TrashIcon } from "lucide-react";
 
 type CreateCodeContainerProps = {
   handleOnChange: OnChange;
@@ -13,7 +18,7 @@ type CreateCodeContainerProps = {
 
 const options = {
   minimap: { enabled: false },
-  lineNumbers: 'off' as const,
+  lineNumbers: "off" as const,
   scrollbar: {
     useShadows: false,
     verticalHasArrows: true,
@@ -30,25 +35,37 @@ const CreateCodeContainer = ({
   selectedFileName,
 }: CreateCodeContainerProps) => {
   function setEditorTheme(monaco: any) {
-    monaco.editor.defineTheme('onedark', {
-      base: 'vs-dark',
+    monaco.editor.defineTheme("onedark", {
+      base: "vs-dark",
       inherit: true,
       rules: [
         {
-          token: 'comment',
-          foreground: '#5d7988',
-          fontStyle: 'italic',
+          token: "comment",
+          foreground: "#5d7988",
+          fontStyle: "italic",
         },
-        { token: 'constant', foreground: '#e06c75' },
+        { token: "constant", foreground: "#e06c75" },
       ],
       colors: {
-        'editor.background': '#0a0a0acc',
+        "editor.background": "#0a0a0acc",
       },
     });
   }
 
-  const languageExtension = selectedFileName?.split('.')[1] || 'js';
+  const languageExtension = selectedFileName?.split(".")[1] || "js";
   const language = extensionToLanguage[languageExtension];
+
+  const [containerStyle, setContainerStyle] = useState<number>(
+    SnippetStyle.Default
+  );
+  const onChangeContainerStyle = (v: string | undefined) => {
+    if (!v) {
+      setContainerStyle(SnippetStyle.Default);
+      return;
+    }
+
+    setContainerStyle(+v);
+  };
 
   return (
     <div>
@@ -59,11 +76,11 @@ const CreateCodeContainer = ({
         beforeMount={setEditorTheme}
         theme="onedark"
         defaultLanguage="javascript"
-        defaultValue="// Hello Zist"
+        defaultValue="// Hello"
         onChange={handleOnChange}
         className={
           (cn(displayFontMapper.Default, defaultFontMapper.Default),
-          'relative min-h-[500px] cursor-default w-full text-xl border-stone-700 p-12 px-8 sm:mb-[calc(2vh)] rounded-lg border sm:px-12 sm:shadow-lg')
+          "bg-[#0A0B0B] border solid rounded-sm relative min-h-[400px] w-full shadow-lg p-4 bg-")
         }
       />
     </div>

@@ -34,3 +34,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+<!-- HAS HELP ME
+https://pagination-with-ssg.vercel.app/
+special props to https://zistapp.xyz/
+https://github.com/Aslam97/shadcn-minimal-tiptap
+https://github.com/hunghg255/reactjs-tiptap-editor
+https://editorjs.io/
+https://github.com/abul2285/next-block-editor-app
+https://quilljs.com/
+https://highlightjs.org/
+https://prismjs.com/
+https://codemirror.net/
+ -->

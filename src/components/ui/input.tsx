@@ -9,6 +9,7 @@ export interface InputProps
   endIcon?: LucideIcon;
   iconCtnClassName?: string;
   startIconSize?: string;
+  ctnClassName?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -17,6 +18,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       className,
       type,
       startIcon,
+      ctnClassName,
       startIconSize,
       iconCtnClassName,
       endIcon,
@@ -34,7 +36,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <div className="w-full relative">
+      <div className={cn("relative", ctnClassName)}>
         {StartIcon && (
           <div
             onClick={focusInput}

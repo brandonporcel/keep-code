@@ -3,7 +3,7 @@ import css from "./sidebar.module.css";
 
 const Sidebar = () => {
   return (
-    <div className={css.sidebar}>
+    <div className={`${css.sidebar} bg-background`}>
       <div className="grow">
         <div className={`${css.itemCtn} ${css.active}`}>
           <div className={`${css.customItem}`}>

@@ -39,7 +39,7 @@ const Header = () => {
     <>
       <header
         ref={headerRef}
-        className="bg-backgroundStrong p-4 pl-10 pr-10 sticky top-0 z-50 w-full bg-opacity-80 flex justify-between items-center shadow-header-custom"
+        className="bg-backgroundStrong p-4 pl-10 pr-10 sticky top-0 w-full bg-opacity-80 flex justify-between items-center shadow-header-custom z-[49]"
       >
         <div className="flex items-center  ">
           <HamburgerMenuIcon
