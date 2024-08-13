@@ -11,8 +11,8 @@ export default function Home() {
         <div className="my-8 mb-4 mx-auto w-[600px]">
           <DialogForm />
         </div>
-        <div className={`mx-auto w-[1744px]`}>
-          <div className="h-32">
+        <div className={`ml-8`}>
+          <div className="h-16">
             <Button>Hello</Button>
           </div>
         </div>
