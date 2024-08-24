@@ -2,18 +2,6 @@
 "use client";
 import Sidebar from "@/components/sidebar/sidebar";
 import { DialogForm } from "@/components/form/dialog-form";
-import { useState } from "react";
-import {
-  DndContext,
-  closestCorners,
-  MouseSensor,
-  TouchSensor,
-  DragOverlay,
-  useSensor,
-  useSensors,
-  MeasuringStrategy,
-} from "@dnd-kit/core";
-import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import { MasonryLayout } from "@/components/masonry";
 
 export default function Home() {
