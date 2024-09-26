@@ -1,127 +1,93 @@
 "use client";
+import { useEffect, useState } from "react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Pin, Trash2Icon } from "lucide-react";
-import {
-  randomFileNamesWithExtension,
-  handleFileContentChange,
-} from "../editor/editor_utils";
-import { useState } from "react";
-import { GistData } from "@/lib/types/gist";
-import { v4 as uuidv4 } from "uuid";
-import CreateCodeContainer from "../editor/CreateCodeContainer";
-import { PrivateSwitch } from "../editor/PrivateSwitch";
-import { SelectCodeContainerStyle } from "../editor/SelectCodeContainerStyle";
-import FileSelector from "../filters/file-selector";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import Form from "./form";
+import { saveSnippet, updateSnippet } from "@/actions/actions";
+import { snippetFormSchema } from "@/lib/schemas/snippet.schema";
+import { Snippet } from "@/lib/types/snippet";
+import { snippetFormStateDefault } from "@/lib/mocks/snippet.mock";
 
-const defaultNewFile = {
-  id: uuidv4(),
-  filename:
-    randomFileNamesWithExtension[
-      Math.floor(Math.random() * randomFileNamesWithExtension.length)
-    ],
-  content: "",
-  type: "text/code",
-  language: "Code",
+type DialogFormOpenerProps = {
+  snippet?: Snippet;
+  onClose?: () => void;
 };
+export function DialogFormOpener({ snippet, onClose }: DialogFormOpenerProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [formState, setFormState] = useState<Snippet>(snippetFormStateDefault);
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
 
-export function DialogForm({ parentProps, isEditing }: any) {
-  const [gistData, setGistData] = useState<GistData>(
-    isEditing
-      ? (parentProps as GistData)
-      : {
-          id: "",
-          description: "",
-          public: false,
-          files: [defaultNewFile],
-        }
-  );
-
-  const [selectedFileId, setSelectedFileId] = useState<string | null>(
-    gistData.files.length > 0 ? gistData.files[0].id : null
-  );
-
-  const handleChangeFileContent = (value: string | undefined) => {
-    handleFileContentChange(selectedFileId, value || "", gistData, setGistData);
+  const handleOpen = (snippet = snippetFormStateDefault) => {
+    setFormState(snippet);
+    setIsOpen(true);
   };
 
-  const handleFileSelect = (value: string | undefined) => {
-    console.log("value", value);
+  const handleClose = async () => {
+    setIsOpen(false);
+    if (onClose) onClose();
+    const isForCreate = !formState.id;
+    if (isForCreate) {
+      const empty = formState.files.every((file) => !file.code.trim());
+      if (empty) return;
+    }
+
+    const action = formState.id ? updateSnippet : saveSnippet;
+    action({
+      snippet: {
+        id: formState.id || "",
+        private: formState.private,
+        title: formState.title,
+        files: formState.files,
+      },
+    });
   };
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormState((prevState) => ({ ...prevState, [name]: value }));
+
+    try {
+      snippetFormSchema.parse(formState);
+      setErrors({ ...errors, [name]: null });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: err.errors[0]?.message,
+        }));
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (snippet) {
+      handleOpen();
+      setFormState(snippet);
+    }
+  }, [snippet]);
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="w-full">New snippet</Button>
-      </DialogTrigger>
-      <DialogContent className="min-w-[50%] hide-close-btn max-h-[90%]">
-        <DialogHeader className="w-12/12 mt-0">
-          <div className="flex items-center justify-between gap-4">
-            <Input
-              placeholder="Title"
-              className="border-0 focus-visible:ring-0 placeholder:text-xl text-xl"
-              ctnClassName="w-full"
-            />
-            <Pin className="cursor-pointer" size={32} />
-          </div>
-        </DialogHeader>
-        <div>
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-2">
-              <Input placeholder="filename.ts" className="w-max" />
-              <Trash2Icon
-                className="cursor-pointer"
-                size={18}
-                color="#ef4444"
-              ></Trash2Icon>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2">
-                <h3>
-                  {gistData.files.length === 1
-                    ? `${gistData.files.length} file`
-                    : gistData.files.length > 1
-                    ? `${gistData.files.length} files`
-                    : ""}
-                </h3>
-                <FileSelector
-                  gistData={gistData}
-                  selectedFileId={selectedFileId}
-                  onChange={(value) => handleFileSelect(value)}
-                />
-              </div>
-              <Button>+</Button>
-            </div>
-          </div>
-
-          <CreateCodeContainer
-            value={
-              gistData.files.find((file) => file.id === selectedFileId)
-                ?.content || ""
-            }
-            handleOnChange={(value: string | undefined) =>
-              handleChangeFileContent(value)
-            }
-            selectedFileName={
-              gistData.files.find((file) => file.id === selectedFileId)
-                ?.filename || ""
-            }
+    <>
+      {!snippet && (
+        <Button className="w-full" onClick={() => handleOpen()}>
+          New snippet
+        </Button>
+      )}
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent
+          className="min-w-[50%] hide-close-btn max-h-[90%]"
+          onCloseAutoFocus={handleClose}
+        >
+          <DialogTitle className="none" />
+          <Form
+            handleChange={handleChange}
+            formState={formState}
+            setFormState={setFormState}
+            errors={errors}
           />
-        </div>
-        <div className="mt-4">
-          <PrivateSwitch
-            text="Private 🕵️‍♂️"
-            className="flex-row-reverse gap-2"
-            labelClassName="font-light"
-          />
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

@@ -1,3 +1,4 @@
+"use client";
 import {
   closestCorners,
   DndContext,
@@ -15,19 +16,20 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Masonry } from "./Masonry";
-import { range } from "./range";
+import { Snippet } from "@/lib/types/snippet";
+import { DialogFormOpener } from "../form/dialog-form";
 
-const initialItems = range(15).map((id) => ({
-  id: id + 1,
-  height: 100 + Math.random() * 400,
-}));
-
-type Item = (typeof initialItems)[number];
-
-export function MasonryLayout() {
-  const [items, setItems] = useState(initialItems);
+type MasonryLayoutProps = {
+  selectedTargets: string[];
+  snippets: Snippet[];
+};
+export function MasonryLayout({
+  snippets,
+  selectedTargets,
+}: MasonryLayoutProps) {
+  const [snippetsHere, setSnippets] = useState<Snippet[]>(snippets);
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -37,76 +39,104 @@ export function MasonryLayout() {
     })
   );
 
+  useEffect(() => {
+    setSnippets(snippets);
+  }, [snippets]);
+
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragEnd={(event) => {
-        const { active, over } = event;
-        if (over && active.id !== over.id) {
-          setItems((items) => {
-            const oldIndex = items.findIndex((item) => item.id === active.id);
-            const newIndex = items.findIndex((item) => item.id === over.id);
-            return arraySwap(items, oldIndex, newIndex);
-          });
-        }
-      }}
-    >
-      <div className="p-4 overflow-clip">
-        <SortableContext items={items} strategy={rectSwappingStrategy}>
-          <Masonry
-            items={items}
-            itemKey={(item) => item.id}
-            columnWidth={300}
-            gap={8}
-            renderItem={(item) => <Cell item={item} />}
-          />
-        </SortableContext>
-      </div>
-    </DndContext>
+    <>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragEnd={(event) => {
+          const { active, over } = event;
+          if (over && active.id !== over.id) {
+            setSnippets((items) => {
+              const oldIndex = items.findIndex((item) => item.id === active.id);
+              const newIndex = items.findIndex((item) => item.id === over.id);
+              return arraySwap(items, oldIndex, newIndex);
+            });
+          }
+        }}
+      >
+        <div className="p-4 overflow-clip">
+          <SortableContext items={snippetsHere} strategy={rectSwappingStrategy}>
+            <Masonry
+              items={snippetsHere}
+              itemKey={(item) => item.id}
+              columnWidth={300}
+              gap={8}
+              renderItem={(item: any) => {
+                return (
+                  <>
+                    <Cell snippet={item} selectedTargets={selectedTargets} />
+                  </>
+                );
+              }}
+            />
+          </SortableContext>
+        </div>
+      </DndContext>
+    </>
   );
 }
 
-function Cell({ item }: { item: Item }) {
+function Cell({
+  snippet,
+  selectedTargets,
+}: {
+  snippet: Snippet;
+  selectedTargets: string[];
+}) {
+  const [toEdit, setToEdit] = useState(false);
+
   const sortable = useSortable({
-    id: item.id,
+    id: snippet.id,
     animateLayoutChanges: (args) => {
       return !args.wasDragging;
     },
   });
 
-  const getPlaceholderHeight = () => {
-    if (sortable.isOver && sortable.active) {
-      return sortable.active.rect.current.initial?.height;
-    }
+  const openEditModal = () => {
+    setToEdit(true);
+  };
 
-    if (sortable.isDragging && sortable.over) {
-      return sortable.over.rect.height;
-    }
-
-    return item.height;
+  const closeEditModal = () => {
+    setToEdit(false);
   };
 
   return (
-    <div style={{ height: getPlaceholderHeight(), transition: "0.2s height" }}>
+    <>
+      {toEdit && (
+        <DialogFormOpener snippet={snippet} onClose={closeEditModal} />
+      )}
+
       <div
-        ref={sortable.setNodeRef}
-        style={{
-          height: item.height,
-          lineHeight: item.height + "px",
-          transform: CSS.Translate.toString(sortable.transform),
-          transition: sortable.transition,
-          // opacity:
-          //   sortable.isOver && sortable.over?.id !== sortable.active?.id
-          //     ? 0.5
-          //     : 1,
-        }}
-        {...sortable.attributes}
-        {...sortable.listeners}
-        className="bg-blue-700 text-white font-bold text-center text-6xl"
+        onClick={openEditModal}
+        style={{ transition: "0.2s height" }}
+        className={
+          selectedTargets.includes(snippet.id) ? "border-2 border-blue-500" : ""
+        }
       >
-        {item.id}
+        <div
+          ref={sortable.setNodeRef}
+          style={{
+            transform: CSS.Translate.toString(sortable.transform),
+            transition: sortable.transition,
+          }}
+          {...sortable.attributes}
+          {...sortable.listeners}
+          className={`bg-muted p-4 rounded-md cube`}
+          id={snippet.id}
+        >
+          <div className="font-bold text-lg">{snippet.title}</div>
+          {snippet.files.length > 0 && (
+            <pre className="mt-2">
+              <code>{snippet.files[0].code}</code>
+            </pre>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

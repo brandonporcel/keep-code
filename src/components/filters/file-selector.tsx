@@ -1,3 +1,4 @@
+"use client";
 import {
   Select,
   SelectContent,
@@ -6,33 +7,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { GistData } from "@/lib/types/gist";
+import { Snippet } from "@/lib/types/snippet";
 
 type Props = {
-  gistData: GistData;
+  formState: Snippet;
   selectedFileId: string | null;
   onChange: (category: string) => void;
 };
 
-function FileSelector({ gistData, selectedFileId, onChange }: Props) {
+function FileSelector({ formState, selectedFileId, onChange }: Props) {
   return (
     <Select
-      defaultValue={selectedFileId || ""}
-      onValueChange={(value) => onChange(value)}
       value={selectedFileId || ""}
+      onValueChange={(value) => onChange(value)}
     >
       <SelectTrigger className="w-[180px] h-10 text-normal-case ring-[var(--ring)]">
         <SelectValue placeholder="Select a file" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {gistData.files.map((file) => (
+          {formState.files.map((file) => (
             <SelectItem
               className="text-normal-case"
               key={file.id}
               value={file.id}
             >
-              {file.filename}
+              {file.name}
             </SelectItem>
           ))}
         </SelectGroup>
