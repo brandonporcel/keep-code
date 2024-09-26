@@ -1,14 +1,10 @@
+"use client";
 import React, { useState } from "react";
 import { Editor, OnChange } from "@monaco-editor/react";
-
 import { defaultFontMapper, displayFontMapper } from "@/app/styles/fonts";
 import { cn } from "@/lib/utils";
 import { extensionToLanguage } from "@/lib/constants/language";
-import { SelectCodeContainerStyle } from "./SelectCodeContainerStyle";
 import { SnippetStyle } from "@/lib/enums/snippet-style.enum";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { Trash2Icon, TrashIcon } from "lucide-react";
 
 type CreateCodeContainerProps = {
   handleOnChange: OnChange;

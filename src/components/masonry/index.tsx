@@ -1,3 +1,4 @@
+"use client";
 import {
   closestCorners,
   DndContext,
@@ -15,11 +16,13 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Masonry } from "./Masonry";
 import { range } from "./range";
+import { getSnippets } from "@/actions/actions";
+import { Snippet } from "@/lib/types/snippet";
 
-const initialItems = range(15).map((id) => ({
+const initialItems = range(10).map((id) => ({
   id: id + 1,
   height: 100 + Math.random() * 400,
 }));
@@ -27,6 +30,16 @@ const initialItems = range(15).map((id) => ({
 type Item = (typeof initialItems)[number];
 
 export function MasonryLayout() {
+  const [snippets, setSnippets] = useState<Snippet[]>([]);
+
+  useEffect(() => {
+    const updateMonkeyCount = async () => {
+      const res = await getSnippets();
+      setSnippets(res);
+    };
+    updateMonkeyCount();
+  }, []);
+
   const [items, setItems] = useState(initialItems);
 
   const sensors = useSensors(
@@ -38,36 +51,40 @@ export function MasonryLayout() {
   );
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCorners}
-      onDragEnd={(event) => {
-        const { active, over } = event;
-        if (over && active.id !== over.id) {
-          setItems((items) => {
-            const oldIndex = items.findIndex((item) => item.id === active.id);
-            const newIndex = items.findIndex((item) => item.id === over.id);
-            return arraySwap(items, oldIndex, newIndex);
-          });
-        }
-      }}
-    >
-      <div className="p-4 overflow-clip">
-        <SortableContext items={items} strategy={rectSwappingStrategy}>
-          <Masonry
-            items={items}
-            itemKey={(item) => item.id}
-            columnWidth={300}
-            gap={8}
-            renderItem={(item) => <Cell item={item} />}
-          />
-        </SortableContext>
-      </div>
-    </DndContext>
+    <>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragEnd={(event) => {
+          const { active, over } = event;
+          if (over && active.id !== over.id) {
+            setItems((items) => {
+              const oldIndex = items.findIndex((item) => item.id === active.id);
+              const newIndex = items.findIndex((item) => item.id === over.id);
+              return arraySwap(items, oldIndex, newIndex);
+            });
+          }
+        }}
+      >
+        <div className="p-4 overflow-clip">
+          <SortableContext items={items} strategy={rectSwappingStrategy}>
+            <Masonry
+              items={items}
+              itemKey={(item) => item.id}
+              columnWidth={300}
+              gap={8}
+              renderItem={(item: any, index: any) => {
+                return <Cell item={item} snippet={snippets[index]} />;
+              }}
+            />
+          </SortableContext>
+        </div>
+      </DndContext>
+    </>
   );
 }
 
-function Cell({ item }: { item: Item }) {
+function Cell({ item, snippet }: { item: Item; snippet: Snippet }) {
   const sortable = useSortable({
     id: item.id,
     animateLayoutChanges: (args) => {
@@ -93,19 +110,23 @@ function Cell({ item }: { item: Item }) {
         ref={sortable.setNodeRef}
         style={{
           height: item.height,
-          lineHeight: item.height + "px",
           transform: CSS.Translate.toString(sortable.transform),
           transition: sortable.transition,
-          // opacity:
-          //   sortable.isOver && sortable.over?.id !== sortable.active?.id
-          //     ? 0.5
-          //     : 1,
         }}
         {...sortable.attributes}
         {...sortable.listeners}
-        className="bg-blue-700 text-white font-bold text-center text-6xl"
+        className="bg-muted p-4 rounded-md overflow-x-auto"
       >
-        {item.id}
+        {snippet ? (
+          <>
+            <div className="font-bold text-lg">{snippet.title}</div>
+            <pre className="mt-2">
+              <code>{snippet.files[0].code}</code>
+            </pre>
+          </>
+        ) : (
+          <div className="text-center">Loading snippet...</div>
+        )}
       </div>
     </div>
   );

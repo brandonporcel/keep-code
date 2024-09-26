@@ -1,21 +1,36 @@
+"use client";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 type SwitchDemoProps = {
   text: string;
   className?: string;
   labelClassName?: string;
+  onChange?: (isChecked: boolean) => void; // Añadido
 };
+
 export function PrivateSwitch({
   text,
   className,
   labelClassName,
+  onChange,
 }: SwitchDemoProps) {
+  const [isChecked, setIsChecked] = useState(false);
+  const handleChange = () => {
+    const newCheckedState = !isChecked;
+    setIsChecked(newCheckedState);
+    if (onChange) onChange(newCheckedState);
+  };
+
   return (
-    // <div className="flex items-center space-x-2">
     <div className={cn("flex items-center space-x-2", className)}>
-      <Switch id="airplane-mode" />
-      <Label htmlFor="airplane-mode" className={cn(labelClassName)}>
+      <Switch
+        checked={isChecked}
+        id="is-private"
+        onCheckedChange={handleChange}
+      />
+      <Label htmlFor="is-private" className={cn(labelClassName)}>
         {text}
       </Label>
     </div>

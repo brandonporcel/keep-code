@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
 import Sidebar from "@/components/sidebar/sidebar";
 import { DialogForm } from "@/components/form/dialog-form";
 import { MasonryLayout } from "@/components/masonry";
