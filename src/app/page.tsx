@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Sidebar from "@/components/sidebar/sidebar";
 import { DialogForm } from "@/components/form/dialog-form";
-import { MasonryLayout } from "@/components/masonry";
+import SelectorArea from "@/components/selector-area";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
           <DialogForm />
         </div>
         <div className="mt-16">
-          <MasonryLayout />
+          <SelectorArea />
         </div>
       </div>
     </div>

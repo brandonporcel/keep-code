@@ -21,6 +21,7 @@ import { Masonry } from "./Masonry";
 import { range } from "./range";
 import { getSnippets } from "@/actions/actions";
 import { Snippet } from "@/lib/types/snippet";
+import { cn } from "@/lib/utils";
 
 const initialItems = range(10).map((id) => ({
   id: id + 1,
@@ -29,19 +30,21 @@ const initialItems = range(10).map((id) => ({
 
 type Item = (typeof initialItems)[number];
 
-export function MasonryLayout() {
-  const [snippets, setSnippets] = useState<Snippet[]>([]);
-
-  useEffect(() => {
-    const updateMonkeyCount = async () => {
-      const res = await getSnippets();
-      setSnippets(res);
-    };
-    updateMonkeyCount();
-  }, []);
-
+type MasonryLayoutProps = {
+  // selectedTargets: (HTMLElement | SVGElement | Element)[];
+  selectedTargets: any[];
+  snippets: Snippet[];
+};
+export function MasonryLayout({
+  snippets,
+  selectedTargets,
+}: MasonryLayoutProps) {
   const [items, setItems] = useState(initialItems);
-
+  console.log("selectedTargets", selectedTargets);
+  // console.log(
+  //   "selectedTargets 2",
+  //   selectedTargets.map((el) => el.id)
+  // );
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor),
@@ -74,7 +77,15 @@ export function MasonryLayout() {
               columnWidth={300}
               gap={8}
               renderItem={(item: any, index: any) => {
-                return <Cell item={item} snippet={snippets[index]} />;
+                return (
+                  <>
+                    <Cell
+                      item={item}
+                      snippet={snippets[index]}
+                      selectedTargets={selectedTargets}
+                    />
+                  </>
+                );
               }}
             />
           </SortableContext>
@@ -84,7 +95,19 @@ export function MasonryLayout() {
   );
 }
 
-function Cell({ item, snippet }: { item: Item; snippet: Snippet }) {
+function Cell({
+  item,
+  snippet,
+  selectedTargets,
+}: {
+  item: Item;
+  snippet: Snippet;
+  // selectedTargets: (HTMLElement | SVGElement | Element)[];
+  selectedTargets: any[];
+}) {
+  // console.log("HIJO item", item);
+  // console.log("HIJO snippet", snippet);
+  // console.log("HIJO selectedTargets", selectedTargets);
   const sortable = useSortable({
     id: item.id,
     animateLayoutChanges: (args) => {
@@ -105,7 +128,19 @@ function Cell({ item, snippet }: { item: Item; snippet: Snippet }) {
   };
 
   return (
-    <div style={{ height: getPlaceholderHeight(), transition: "0.2s height" }}>
+    <div
+      style={{ height: getPlaceholderHeight(), transition: "0.2s height" }}
+      // className={"border-2 border-blue-500"}
+      className={
+        selectedTargets.find((el) => el === item.id + "")
+          ? "border-2 border-blue-500"
+          : ""
+      }
+    >
+      {/* {selectedTargets.map((el, i) => {
+        return <p key={i}>{JSON.stringify(el)}</p>;
+      })} */}
+
       <div
         ref={sortable.setNodeRef}
         style={{
@@ -115,7 +150,10 @@ function Cell({ item, snippet }: { item: Item; snippet: Snippet }) {
         }}
         {...sortable.attributes}
         {...sortable.listeners}
-        className="bg-muted p-4 rounded-md overflow-x-auto"
+        className={`bg-muted p-4 rounded-md overflow-x-auto cube`}
+        id={item.id + ""}
+        // data-coso={item.id + "q"}
+        // data-idd={item.id + "q"}
       >
         {snippet ? (
           <>
