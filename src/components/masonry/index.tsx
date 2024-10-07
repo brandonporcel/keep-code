@@ -16,12 +16,10 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Masonry } from "./Masonry";
 import { range } from "./range";
-import { getSnippets } from "@/actions/actions";
 import { Snippet } from "@/lib/types/snippet";
-import { cn } from "@/lib/utils";
 
 const initialItems = range(10).map((id) => ({
   id: id + 1,
@@ -31,8 +29,7 @@ const initialItems = range(10).map((id) => ({
 type Item = (typeof initialItems)[number];
 
 type MasonryLayoutProps = {
-  // selectedTargets: (HTMLElement | SVGElement | Element)[];
-  selectedTargets: any[];
+  selectedTargets: string[];
   snippets: Snippet[];
 };
 export function MasonryLayout({
@@ -40,11 +37,7 @@ export function MasonryLayout({
   selectedTargets,
 }: MasonryLayoutProps) {
   const [items, setItems] = useState(initialItems);
-  console.log("selectedTargets", selectedTargets);
-  // console.log(
-  //   "selectedTargets 2",
-  //   selectedTargets.map((el) => el.id)
-  // );
+
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor),
@@ -102,12 +95,8 @@ function Cell({
 }: {
   item: Item;
   snippet: Snippet;
-  // selectedTargets: (HTMLElement | SVGElement | Element)[];
-  selectedTargets: any[];
+  selectedTargets: string[];
 }) {
-  // console.log("HIJO item", item);
-  // console.log("HIJO snippet", snippet);
-  // console.log("HIJO selectedTargets", selectedTargets);
   const sortable = useSortable({
     id: item.id,
     animateLayoutChanges: (args) => {
@@ -128,44 +117,44 @@ function Cell({
   };
 
   return (
-    <div
-      style={{ height: getPlaceholderHeight(), transition: "0.2s height" }}
-      // className={"border-2 border-blue-500"}
-      className={
-        selectedTargets.find((el) => el === item.id + "")
-          ? "border-2 border-blue-500"
-          : ""
-      }
-    >
-      {/* {selectedTargets.map((el, i) => {
-        return <p key={i}>{JSON.stringify(el)}</p>;
-      })} */}
-
+    <>
       <div
-        ref={sortable.setNodeRef}
         style={{
-          height: item.height,
-          transform: CSS.Translate.toString(sortable.transform),
-          transition: sortable.transition,
+          height: getPlaceholderHeight(),
+          transition: "0.2s height",
         }}
-        {...sortable.attributes}
-        {...sortable.listeners}
-        className={`bg-muted p-4 rounded-md overflow-x-auto cube`}
-        id={item.id + ""}
-        // data-coso={item.id + "q"}
-        // data-idd={item.id + "q"}
+        // className={
+        //   selectedTargets.find((el) => el === item.id + "")
+        //     ? "border-2 border-blue-500 bg-green-400 p-2"
+        //     : "bg-green-400 p-2"
+        // }
       >
-        {snippet ? (
-          <>
-            <div className="font-bold text-lg">{snippet.title}</div>
-            <pre className="mt-2">
-              <code>{snippet.files[0].code}</code>
-            </pre>
-          </>
-        ) : (
-          <div className="text-center">Loading snippet...</div>
-        )}
+        <div
+          ref={sortable.setNodeRef}
+          style={{
+            // minHeight: "max-content",
+            height: item.height,
+            transform: CSS.Translate.toString(sortable.transform),
+            transition: sortable.transition,
+            maxHeight: "100%",
+          }}
+          {...sortable.attributes}
+          {...sortable.listeners}
+          className={`bg-muted p-4 rounded-md overflow-x-auto cube`}
+          id={item.id + ""}
+        >
+          {snippet ? (
+            <>
+              <div className="font-bold text-lg">{snippet.title}</div>
+              <pre className="mt-2">
+                <code>{snippet.files[0].code}</code>
+              </pre>
+            </>
+          ) : (
+            <div className="text-center">Loading snippet...</div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

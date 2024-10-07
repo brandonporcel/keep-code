@@ -11,6 +11,7 @@ import Form from "./form";
 import { saveSnippet } from "@/actions/actions";
 import { snippetFormSchema } from "@/lib/schemas/snippet.schema";
 import { z } from "zod";
+import { Snippet } from "@/lib/types/snippet";
 
 const defaultValues = {
   title: "",
@@ -18,7 +19,11 @@ const defaultValues = {
   code: "",
 };
 
-export function DialogForm() {
+type DialogFormProps = {
+  snippet?: Snippet;
+};
+export function DialogForm({ snippet }: DialogFormProps) {
+  console.log("snippet to edit", snippet);
   const [isOpen, setIsOpen] = useState(false);
   const [formState, setFormState] = useState(defaultValues);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
