@@ -86,3 +86,12 @@ export const handleFileContentChange = (
     files: updatedFiles,
   });
 };
+
+export const handleFileChange = (
+  id: string | undefined,
+  setSelectedFileId: React.Dispatch<React.SetStateAction<string | null>>
+) => {
+  if (id) {
+    setSelectedFileId(id);
+  }
+};

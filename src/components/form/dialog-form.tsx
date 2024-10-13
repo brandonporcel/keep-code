@@ -8,12 +8,14 @@ import { saveSnippet, updateSnippet } from "@/actions/actions";
 import { snippetFormSchema } from "@/lib/schemas/snippet.schema";
 import { Snippet } from "@/lib/types/snippet";
 import { snippetFormStateDefault } from "@/lib/mocks/snippet.mock";
+import { useSnippetContext } from "@/app/contexts/SnippetContext";
 
 type DialogFormOpenerProps = {
   snippet?: Snippet;
   onClose?: () => void;
 };
 export function DialogFormOpener({ snippet, onClose }: DialogFormOpenerProps) {
+  const { setSnippets } = useSnippetContext();
   const [isOpen, setIsOpen] = useState(false);
   const [formState, setFormState] = useState<Snippet>(snippetFormStateDefault);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
@@ -23,17 +25,28 @@ export function DialogFormOpener({ snippet, onClose }: DialogFormOpenerProps) {
     setIsOpen(true);
   };
 
+  const handleSnippetUpdate = (updatedSnippet: Snippet, isNew = false) => {
+    setSnippets((prevSnippets) => {
+      if (isNew) {
+        return [...prevSnippets, updatedSnippet];
+      }
+      return prevSnippets.map((snippet) =>
+        snippet.id === updatedSnippet.id ? updatedSnippet : snippet
+      );
+    });
+  };
+
   const handleClose = async () => {
     setIsOpen(false);
     if (onClose) onClose();
+
     const isForCreate = !formState.id;
-    if (isForCreate) {
-      const empty = formState.files.every((file) => !file.code.trim());
-      if (empty) return;
+    if (isForCreate && formState.files.every((file) => !file.code.trim())) {
+      return;
     }
 
-    const action = formState.id ? updateSnippet : saveSnippet;
-    action({
+    const action = isForCreate ? saveSnippet : updateSnippet;
+    await action({
       snippet: {
         id: formState.id || "",
         private: formState.private,
@@ -41,6 +54,8 @@ export function DialogFormOpener({ snippet, onClose }: DialogFormOpenerProps) {
         files: formState.files,
       },
     });
+
+    handleSnippetUpdate(formState, isForCreate);
   };
 
   const handleChange = (e: any) => {
