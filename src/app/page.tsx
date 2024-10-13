@@ -1,8 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
 import Sidebar from "@/components/sidebar/sidebar";
-import { DialogForm } from "@/components/form/dialog-form";
-import { MasonryLayout } from "@/components/masonry";
+import { DialogFormOpener } from "@/components/form/dialog-form";
+import SelectorArea from "@/components/selector-area";
 
 export default function Home() {
   return (
@@ -11,10 +10,10 @@ export default function Home() {
       <Sidebar />
       <div className="w-full">
         <div className="my-8 mb-4 mx-auto w-[600px]">
-          <DialogForm />
+          <DialogFormOpener />
         </div>
         <div className="mt-16">
-          <MasonryLayout />
+          <SelectorArea />
         </div>
       </div>
     </div>
