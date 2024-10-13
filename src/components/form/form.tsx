@@ -8,6 +8,7 @@ import { Snippet } from "@/lib/types/snippet";
 import CreateCodeContainer from "../editor/CreateCodeContainer";
 import {
   addNewFile,
+  handleFileChange,
   handleFileContentChange,
   handleFileNameChange,
   removeFile,
@@ -55,10 +56,8 @@ export default function Form({
     );
   };
 
-  const handleFileSelect = (value: string) => {
-    if (value) {
-      setSelectedFileId(value);
-    }
+  const handleFileSelect = (id: string | undefined) => {
+    handleFileChange(id, setSelectedFileId);
   };
 
   return (

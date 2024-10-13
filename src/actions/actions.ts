@@ -1,5 +1,4 @@
 "use server";
-
 import prisma from "@/lib/db";
 import { Snippet } from "@/lib/types/snippet";
 
@@ -10,19 +9,23 @@ interface SaveSnippetProps {
 interface EditSnippetProps extends SaveSnippetProps {}
 
 export async function saveSnippet({ snippet }: SaveSnippetProps) {
-  await prisma.snippet.create({
+  console.log("snippet.id", snippet.id);
+  return await prisma.snippet.create({
     data: {
-      title: snippet.title ?? Date.now().toString(),
+      title: snippet.title,
       userId: "4fe40d44-54ba-4325-9b37-b27771cdeb7a",
       files: {
         createMany: {
           data: snippet.files.map((snipp, i) => ({
-            code: snipp.code ?? "-",
+            code: snipp.code,
             index: i,
             name: snipp.name,
           })),
         },
       },
+    },
+    include: {
+      files: true,
     },
   });
 }
@@ -50,6 +53,14 @@ export async function getSnippets(): Promise<Snippet[]> {
   return await prisma.snippet.findMany({
     include: {
       files: true,
+    },
+  });
+}
+
+export async function deleteSnippets(snippets: Snippet[]) {
+  return await prisma.snippet.deleteMany({
+    where: {
+      id: { in: snippets.map((el) => el.id) },
     },
   });
 }

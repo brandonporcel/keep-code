@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import Header from "@/components/header";
+import { SnippetContextProvider } from "./contexts/SnippetContext";
 
 const inter = Inter({ subsets: ["latin"] });
 const appDescription =
@@ -90,8 +91,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          {children}
+          <SnippetContextProvider>
+            <Header />
+            {children}
+          </SnippetContextProvider>
         </ThemeProvider>
       </body>
     </html>

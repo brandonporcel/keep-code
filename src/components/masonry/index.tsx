@@ -29,7 +29,7 @@ export function MasonryLayout({
   snippets,
   selectedTargets,
 }: MasonryLayoutProps) {
-  const [snippetsHere, setSnippets] = useState<Snippet[]>(snippets);
+  const [localSnippets, setLocalSnippets] = useState<Snippet[]>(snippets);
 
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -40,7 +40,7 @@ export function MasonryLayout({
   );
 
   useEffect(() => {
-    setSnippets(snippets);
+    setLocalSnippets(snippets);
   }, [snippets]);
 
   return (
@@ -51,7 +51,7 @@ export function MasonryLayout({
         onDragEnd={(event) => {
           const { active, over } = event;
           if (over && active.id !== over.id) {
-            setSnippets((items) => {
+            setLocalSnippets((items) => {
               const oldIndex = items.findIndex((item) => item.id === active.id);
               const newIndex = items.findIndex((item) => item.id === over.id);
               return arraySwap(items, oldIndex, newIndex);
@@ -60,9 +60,12 @@ export function MasonryLayout({
         }}
       >
         <div className="p-4 overflow-clip">
-          <SortableContext items={snippetsHere} strategy={rectSwappingStrategy}>
+          <SortableContext
+            items={localSnippets}
+            strategy={rectSwappingStrategy}
+          >
             <Masonry
-              items={snippetsHere}
+              items={localSnippets}
               itemKey={(item) => item.id}
               columnWidth={300}
               gap={8}

@@ -12,11 +12,34 @@ import { Input } from "./ui/input";
 import { ThemeToggle } from "./theme-toggle";
 import { Avatar } from "./header/avatar";
 import IconWrapper from "./header/IconWrapper";
+import { useSnippetContext } from "@/app/contexts/SnippetContext";
+import ProgressActivity from "@/icons/ProgressActivity";
+import CloudDone from "@/icons/CloudDone";
+import { getSnippets } from "@/actions/actions";
 
 const Header = () => {
+  const { isLoading, setIsLoading, setSnippets } = useSnippetContext();
   const [showSideBar, setShowSideBar] = useState(false);
+  const [showFinalizedIcon, setShowFinalizedIcon] = useState(false);
   const headerRef = createRef<HTMLInputElement>();
   const inputRef = createRef<HTMLInputElement>();
+
+  const handleFinalizationLoad = () => {
+    setShowFinalizedIcon(true);
+    setTimeout(() => {
+      setShowFinalizedIcon(false);
+    }, 1000);
+  };
+
+  const reloadSnippets = async () => {
+    setIsLoading(true);
+    const res = await getSnippets();
+    setSnippets(res);
+    setIsLoading(false);
+
+    handleFinalizationLoad();
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       if (!headerRef.current) return;
@@ -75,7 +98,13 @@ const Header = () => {
           </div>
         </div>
         <nav className="flex gap-8 items-center">
-          <IconWrapper icon={ReloadIcon} text="Refresh" />
+          {!isLoading && !showFinalizedIcon && (
+            <div onClick={reloadSnippets}>
+              <IconWrapper icon={ReloadIcon} text="Refresh" />
+            </div>
+          )}
+          {showFinalizedIcon && <CloudDone />}
+          {isLoading && <ProgressActivity className="cursor-pointer" />}
           <IconWrapper icon={ViewHorizontalIcon} text="List View" />
           <ThemeToggle />
           <Avatar />
