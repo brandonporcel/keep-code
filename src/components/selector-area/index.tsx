@@ -49,11 +49,18 @@ export default function SelectorArea() {
           const restoredSnippets = await Promise.all(
             lastDeletedSnippets.map(async (snippet) => {
               const savedSnippet = await saveSnippet({ snippet });
-              return savedSnippet;
+              return savedSnippet instanceof Error ? null : savedSnippet;
             })
           );
 
-          setSnippets((prevSnippets) => [...prevSnippets, ...restoredSnippets]);
+          const validRestoredSnippets = restoredSnippets.filter(
+            (snippet) => snippet !== null
+          );
+
+          setSnippets((prevSnippets) => [
+            ...prevSnippets,
+            ...validRestoredSnippets,
+          ]);
           setLastDeletedSnippets(null);
         }
       } catch (error) {
@@ -77,12 +84,6 @@ export default function SelectorArea() {
         selectByClick={true}
         selectFromInside={false}
         toggleContinueSelect={["shift"]}
-        onDragStart={(e) => {
-          const target = e.inputEvent.target;
-          if (selectedTargets.some((t) => t === target || t.contains(target))) {
-            e.stop();
-          }
-        }}
         onSelectEnd={(e) => {
           const selectedElements = e.selected;
           setSelectedTargets(selectedElements);

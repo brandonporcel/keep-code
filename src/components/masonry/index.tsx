@@ -71,9 +71,7 @@ export function MasonryLayout({
               gap={8}
               renderItem={(item: any) => {
                 return (
-                  <>
-                    <Cell snippet={item} selectedTargets={selectedTargets} />
-                  </>
+                  <Cell snippet={item} selectedTargets={selectedTargets} />
                 );
               }}
             />
