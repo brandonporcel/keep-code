@@ -21,6 +21,8 @@ export const addNewFile = (
   setSelectedFileId: React.Dispatch<React.SetStateAction<string | null>>
 ) => {
   const newFileId = crypto.randomUUID();
+  const newIndex = formState.files.length;
+
   setFormState({
     ...formState,
     files: [
@@ -31,9 +33,14 @@ export const addNewFile = (
           Math.floor(Math.random() * randomFileNamesWithExtension.length)
         ],
         code: "",
+        createdAt: new Date(),
+        index: newIndex,
+        snippetId: formState.id,
+        updatedAt: new Date(),
       },
     ],
   });
+
   setSelectedFileId(newFileId);
 };
 
