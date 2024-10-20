@@ -101,12 +101,6 @@ export default function RootLayout({
           >
             <SnippetContextProvider>
               <Header />
-              {/* <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn> */}
               {children}
             </SnippetContextProvider>
           </ThemeProvider>

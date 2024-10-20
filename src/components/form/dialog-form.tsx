@@ -7,7 +7,7 @@ import Form from "./form";
 import { saveSnippet, updateSnippet } from "@/actions/actions";
 import { snippetFormSchema } from "@/lib/schemas/snippet.schema";
 import { Snippet, SnippetFile } from "@/lib/types/snippet";
-import { snippetFormStateDefault } from "@/lib/mocks/snippet.mock";
+import { getSnippetFormStateDefault } from "@/lib/mocks/snippet.mock";
 import { useSnippetContext } from "@/app/contexts/SnippetContext";
 
 type DialogFormOpenerProps = {
@@ -17,11 +17,16 @@ type DialogFormOpenerProps = {
 export function DialogFormOpener({ snippet, onClose }: DialogFormOpenerProps) {
   const { snippets, setSnippets } = useSnippetContext();
   const [isOpen, setIsOpen] = useState(false);
-  const [formState, setFormState] = useState<Snippet>(snippetFormStateDefault);
+  const [formState, setFormState] = useState<Snippet>(
+    getSnippetFormStateDefault(crypto.randomUUID())
+  );
+
   const [errors, setErrors] = useState<Record<string, string | null>>({});
 
-  const handleOpen = (snippet = snippetFormStateDefault) => {
-    setFormState(snippet);
+  const handleOpen = (snippet?: Snippet) => {
+    let item = snippet;
+    if (!item) item = getSnippetFormStateDefault(crypto.randomUUID());
+    setFormState(item);
     setIsOpen(true);
   };
 
@@ -40,22 +45,26 @@ export function DialogFormOpener({ snippet, onClose }: DialogFormOpenerProps) {
     setIsOpen(false);
     onClose?.();
 
-    const isForCreate = !formState.id;
-    if (isForCreate && formState.files.every((file) => !file.code.trim())) {
-      return;
-    }
+    const isForCreate = !snippet;
+    const hasFiles = formState.files.some((file) => file.code.trim());
+
+    if (isForCreate && !hasFiles) return;
 
     let updatedExistingFiles: SnippetFile[] = [];
-    let updatedNewExistingFiles: SnippetFile[] = [];
-    if (!isForCreate) {
-      const snippetToEdit = snippets.find(({ id }) => id === formState.id)!;
-      const previousFileIds = snippetToEdit.files.map((file) => file.id);
+    let updatedNewFiles: SnippetFile[] = [];
 
-      updatedExistingFiles = formState.files.filter(({ id }) =>
-        previousFileIds.includes(id)
+    if (!isForCreate) {
+      const snippetToEdit = snippets.find(({ id }) => id === formState.id);
+      if (!snippetToEdit) return;
+
+      const previousFileIds = new Set(
+        snippetToEdit.files.map((file) => file.id)
       );
-      updatedNewExistingFiles = formState.files.filter(
-        ({ id }) => !previousFileIds.includes(id)
+      updatedExistingFiles = formState.files.filter(({ id }) =>
+        previousFileIds.has(id)
+      );
+      updatedNewFiles = formState.files.filter(
+        ({ id }) => !previousFileIds.has(id)
       );
 
       updateSnippet({
@@ -66,18 +75,19 @@ export function DialogFormOpener({ snippet, onClose }: DialogFormOpenerProps) {
           files: formState.files,
         },
         updatedExistingFiles,
-        updatedNewExistingFiles,
+        updatedNewFiles,
       });
     } else {
       await saveSnippet({
         snippet: {
-          id: "",
+          id: formState.id,
           private: formState.private,
           title: formState.title,
           files: formState.files,
         },
       });
     }
+
     handleSnippetUpdate(formState, isForCreate);
   };
 

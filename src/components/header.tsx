@@ -7,15 +7,16 @@ import {
   ReloadIcon,
   ViewHorizontalIcon,
 } from "@radix-ui/react-icons";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Search } from "lucide-react";
 import { Input } from "./ui/input";
 import { ThemeToggle } from "./theme-toggle";
-import { Avatar } from "./header/avatar";
 import IconWrapper from "./header/IconWrapper";
 import { useSnippetContext } from "@/app/contexts/SnippetContext";
 import ProgressActivity from "@/icons/ProgressActivity";
 import CloudDone from "@/icons/CloudDone";
 import { getSnippets } from "@/actions/actions";
+import { Button } from "./ui/button";
 
 const Header = () => {
   const { isLoading, setIsLoading, setSnippets } = useSnippetContext();
@@ -107,7 +108,14 @@ const Header = () => {
           {isLoading && <ProgressActivity className="cursor-pointer" />}
           <IconWrapper icon={ViewHorizontalIcon} text="List View" />
           <ThemeToggle />
-          <Avatar />
+          <SignedOut>
+            <Button>
+              <SignInButton />
+            </Button>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </nav>
       </header>
       <div className="absolute left-9 top-24 transition-all duration-300 delay-100 lg:hidden">
