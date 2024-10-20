@@ -1,8 +1,11 @@
+import { sql } from "@vercel/postgres";
 import Sidebar from "@/components/sidebar/sidebar";
 import { DialogFormOpener } from "@/components/form/dialog-form";
 import SelectorArea from "@/components/selector-area";
 
-export default function Home() {
+export default async function Home() {
+  // const { rows } = await sql`SELECT * from CUSTOMERS`;
+  // console.log(rows);
   return (
     <div className="flex">
       <span className="min-w-20" />

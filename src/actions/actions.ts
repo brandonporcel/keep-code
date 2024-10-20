@@ -14,14 +14,14 @@ interface EditSnippetProps extends SaveSnippetProps {
 }
 
 export async function saveSnippet({ snippet }: SaveSnippetProps) {
-  const { userId } = auth();
-  if (!userId) return new Error("User not found");
-
+  // const { userId } = auth();
+  // if (!userId) return new Error("User not found");
+  console.log("guardo snippet");
   return await prisma.snippet.create({
     data: {
       id: snippet.id,
       title: snippet.title,
-      userId,
+      userId: "1d34cd6c-1185-4466-ae15-d968bdfd38fa",
       files: {
         createMany: {
           data: snippet.files.map((snipp, i) => ({
@@ -44,6 +44,7 @@ export async function updateSnippet({
   updatedExistingFiles,
   updatedNewFiles,
 }: EditSnippetProps) {
+  console.log("actualizo snippet");
   const updatePromises = updatedExistingFiles.map((file) => {
     return prisma.snippetFile.update({
       where: { id: file.id },
@@ -78,11 +79,12 @@ export async function updateSnippet({
 }
 
 export async function getSnippets() {
-  const { userId } = auth();
-  if (!userId) return [];
+  // const { userId } = auth();
+  console.log("obtengo snippets");
+  // if (!userId) return [];
 
   return await prisma.snippet.findMany({
-    where: { userId },
+    // where: { userId },
     include: {
       files: true,
     },
