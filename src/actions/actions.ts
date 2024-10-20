@@ -1,7 +1,8 @@
 "use server";
+import { auth } from "@clerk/nextjs/server";
+import { SnippetFile } from "@prisma/client";
 import prisma from "@/lib/db";
 import { Snippet } from "@/lib/types/snippet";
-import { SnippetFile } from "@prisma/client";
 
 interface SaveSnippetProps {
   snippet: Snippet;
@@ -9,18 +10,22 @@ interface SaveSnippetProps {
 
 interface EditSnippetProps extends SaveSnippetProps {
   updatedExistingFiles: SnippetFile[];
-  updatedNewExistingFiles: SnippetFile[];
+  updatedNewFiles: SnippetFile[];
 }
 
 export async function saveSnippet({ snippet }: SaveSnippetProps) {
-  console.log("snippet.id", snippet.id);
+  const { userId } = auth();
+  if (!userId) return new Error("User not found");
+
   return await prisma.snippet.create({
     data: {
+      id: snippet.id,
       title: snippet.title,
-      userId: "4fe40d44-54ba-4325-9b37-b27771cdeb7a",
+      userId,
       files: {
         createMany: {
           data: snippet.files.map((snipp, i) => ({
+            id: snipp.id,
             code: snipp.code,
             index: i,
             name: snipp.name,
@@ -37,7 +42,7 @@ export async function saveSnippet({ snippet }: SaveSnippetProps) {
 export async function updateSnippet({
   snippet,
   updatedExistingFiles,
-  updatedNewExistingFiles,
+  updatedNewFiles,
 }: EditSnippetProps) {
   const updatePromises = updatedExistingFiles.map((file) => {
     return prisma.snippetFile.update({
@@ -49,9 +54,10 @@ export async function updateSnippet({
     });
   });
 
-  const createPromises = updatedNewExistingFiles.map((file) => {
+  const createPromises = updatedNewFiles.map((file) => {
     return prisma.snippetFile.create({
       data: {
+        id: file.id,
         name: file.name,
         code: file.code,
         index: file.index,
@@ -71,8 +77,12 @@ export async function updateSnippet({
   });
 }
 
-export async function getSnippets(): Promise<Snippet[]> {
+export async function getSnippets() {
+  const { userId } = auth();
+  if (!userId) return [];
+
   return await prisma.snippet.findMany({
+    where: { userId },
     include: {
       files: true,
     },
