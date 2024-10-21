@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  email    String
+  password String
+  avatar   String
+
+  // Relación de uno a muchos con Snippet
+  snippets Snippet[]
+
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Snippet {
+  id      String  @id @default(uuid())
+  title   String
+  pinned  Boolean @default(false)
+  private Boolean @default(false)
+
+  // Relación de uno a muchos con SnippetFile
+  files SnippetFile[]
+
+  // Relación de muchos a uno con User
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
+
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("snippets")
+}
+
+model SnippetFile {
+  id    String @id @default(uuid())
+  name  String @map("name")
+  code  String @db.Text
+  index Int    @map("index")
+
+  // Relación de muchos a uno con Snippet
+  snippetId String  @map("snippet_id")
+  snippet   Snippet @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("snippets_files")
+}
