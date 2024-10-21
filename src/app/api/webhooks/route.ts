@@ -4,6 +4,7 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import prisma from "@/lib/db";
 
 export async function POST(req: Request) {
+  console.log("WEBHOOK CLERK");
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
@@ -52,6 +53,7 @@ export async function POST(req: Request) {
   const eventType = evt.type;
   const data = JSON.parse(body).data;
   if (eventType === "user.created" || eventType === "user.updated") {
+    console.log("WEBHOOK eventType: ", eventType);
     const user = await prisma.user.upsert({
       where: { id: data.id },
       create: {

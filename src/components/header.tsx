@@ -109,9 +109,9 @@ const Header = () => {
           <IconWrapper icon={ViewHorizontalIcon} text="List View" />
           <ThemeToggle />
           <SignedOut>
-            <Button>
-              <SignInButton />
-            </Button>
+            <SignInButton>
+              <Button>Sign In</Button>
+            </SignInButton>
           </SignedOut>
           <SignedIn>
             <UserButton />
