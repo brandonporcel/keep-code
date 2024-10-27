@@ -83,11 +83,10 @@ export async function updateSnippet({
 
 export async function getSnippets() {
   console.log("getSnippets");
-  // const { userId } = auth();
-  // if (!userId) return [];
+  const { userId } = auth();
 
   return await prisma.snippet.findMany({
-    // where: { userId },
+    where: userId ? { userId } : undefined,
     include: {
       files: true,
     },
