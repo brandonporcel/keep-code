@@ -124,7 +124,7 @@ export function DialogFormOpener({ snippet, onClose }: DialogFormOpenerProps) {
       )}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
-          className="min-w-[50%] hide-close-btn max-h-[90%]"
+          className="min-w-[60%] hide-close-btn max-h-[95%]"
           onCloseAutoFocus={handleClose}
         >
           <DialogTitle className="none" />
