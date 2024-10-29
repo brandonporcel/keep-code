@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Pin, Trash2Icon } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
 import FileSelector from "../filters/file-selector";
 import { Button } from "../ui/button";
 import { Snippet } from "@/lib/types/snippet";
@@ -71,8 +71,6 @@ export default function Form({
           className="border-0 focus-visible:ring-0 placeholder:text-xl text-xl"
           ctnClassName="w-full"
         />
-
-        <Pin className="cursor-pointer" size={32} />
       </div>
       {errors.title && <p className="text-red-500 text-xs">{errors.title}</p>}
       <div className="flex justify-between items-center mb-4">

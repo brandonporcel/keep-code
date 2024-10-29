@@ -11,9 +11,7 @@ export default function Home() {
         <div className="my-8 mb-4 mx-auto w-[600px]">
           <DialogFormOpener />
         </div>
-        <div className="mt-16">
-          <SelectorArea />
-        </div>
+        <SelectorArea />
       </div>
     </div>
   );

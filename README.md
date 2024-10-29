@@ -25,6 +25,7 @@ npm run dev
 - [ ] Show a confirmation alert when closing the page during a save operation
 - [ ] Develop an offline version with toast notifications
 - [ ] Improve responsive user experience
+- [ ] Add vscode styles (by themes and languages)
 
 #### Short log
 
@@ -50,4 +51,5 @@ https://highlightjs.org/
 https://prismjs.com/
 https://codemirror.net/
 https://github.com/itsMapleLeaf/dnd-kit-masonry-demo/tree/framer-motion
+https://github.com/suyeonme/google-keep-clone
  -->

@@ -132,7 +132,7 @@ function Cell({
         >
           <div className="font-bold text-lg">{snippet.title}</div>
           {snippet.files.length > 0 && (
-            <pre className="mt-2">
+            <pre className="mt-2 bg-[#24334b]">
               <code>{snippet.files[0].code}</code>
             </pre>
           )}

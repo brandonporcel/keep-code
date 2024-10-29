@@ -84,6 +84,12 @@ export default function SelectorArea() {
         selectByClick={true}
         selectFromInside={false}
         toggleContinueSelect={["shift"]}
+        onDragStart={(e) => {
+          const target = e.inputEvent.target;
+          if (selectedTargets.some((t) => t === target || t.contains(target))) {
+            e.stop();
+          }
+        }}
         onSelectEnd={(e) => {
           const selectedElements = e.selected;
           setSelectedTargets(selectedElements);

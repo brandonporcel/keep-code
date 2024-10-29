@@ -1,10 +1,8 @@
 "use client";
-import React, { useState } from "react";
 import { Editor, OnChange } from "@monaco-editor/react";
 import { defaultFontMapper, displayFontMapper } from "@/app/styles/fonts";
 import { cn } from "@/lib/utils";
 import { extensionToLanguage } from "@/lib/constants/language";
-import { SnippetStyle } from "@/lib/enums/snippet-style.enum";
 
 type CreateCodeContainerProps = {
   handleOnChange: OnChange;
@@ -51,18 +49,6 @@ const CreateCodeContainer = ({
   const languageExtension = selectedFileName?.split(".")[1] || "js";
   const language = extensionToLanguage[languageExtension];
 
-  const [containerStyle, setContainerStyle] = useState<number>(
-    SnippetStyle.Default
-  );
-  const onChangeContainerStyle = (v: string | undefined) => {
-    if (!v) {
-      setContainerStyle(SnippetStyle.Default);
-      return;
-    }
-
-    setContainerStyle(+v);
-  };
-
   return (
     <div>
       <Editor
@@ -76,7 +62,7 @@ const CreateCodeContainer = ({
         onChange={handleOnChange}
         className={
           (cn(displayFontMapper.Default, defaultFontMapper.Default),
-          "bg-[#0A0B0B] border solid rounded-sm relative min-h-[400px] w-full shadow-lg p-4 bg-")
+          "bg-[#0A0B0B] border solid rounded-sm relative min-h-[500px] w-full shadow-lg p-4 bg-")
         }
       />
     </div>
